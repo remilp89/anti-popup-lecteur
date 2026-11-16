@@ -13,3 +13,6 @@ node_modules/
 # Fichiers locaux jamais publiés
 *.local.*
 .env*
+
+# Visuels sources du logo (grands fichiers, non nécessaires à l'extension)
+logo-source/

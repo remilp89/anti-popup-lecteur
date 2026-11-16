@@ -3,18 +3,45 @@
   "name": "Anti-Popup Lecteur",
   "version": "1.0.0",
   "description": "Bloque les onglets publicitaires ouverts au clic sur un lecteur vidéo, reclique automatiquement jusqu'au lancement de la vidéo, puis passe en plein écran.",
-  "permissions": ["storage", "tabs", "webNavigation"],
-  "host_permissions": ["<all_urls>"],
-  "background": { "service_worker": "background.js" },
-  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "action": {
     "default_title": "Anti-Popup Lecteur",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["main.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "main.js"
+      ],
       "run_at": "document_start",
       "all_frames": true,
       "match_about_blank": true,
@@ -22,8 +49,12 @@
       "world": "MAIN"
     },
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
       "run_at": "document_start",
       "all_frames": true,
       "match_about_blank": true,
