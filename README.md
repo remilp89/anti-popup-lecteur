@@ -28,7 +28,7 @@ L'extension n'est pas (encore) publiée sur le Chrome Web Store : elle s'install
 1. **Récupérer le code**
 
    ```bash
-   git clone https://github.com/<votre-compte>/anti-popup-lecteur.git
+   git clone https://github.com/remilp89/anti-popup-lecteur.git
    ```
 
    ou, sur la page GitHub du dépôt, **Code → Download ZIP**, puis décompressez l'archive.
