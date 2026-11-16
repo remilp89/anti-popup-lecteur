@@ -1,4 +1,8 @@
-# Anti-Popup Lecteur
+<p align="center">
+  <img src="extension/icons/icon128.png" width="128" height="128" alt="Logo Anti-Popup Lecteur : un bouclier bleu avec un lecteur vidéo">
+</p>
+
+<h1 align="center">Anti-Popup Lecteur</h1>
 
 Extension de navigateur (Chrome et navigateurs basés sur Chromium, Manifest V3) qui supprime les pièges publicitaires autour des lecteurs vidéo : onglets qui s'ouvrent au clic, redirections de la page, calques invisibles posés par-dessus le lecteur. Elle reclique ensuite automatiquement jusqu'au lancement de la vidéo et passe en plein écran.
 
