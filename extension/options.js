@@ -111,6 +111,8 @@ $('add').onsubmit = async (e) => {
   render();
 };
 
+$('version').textContent = 'Version ' + chrome.runtime.getManifest().version;
+
 // Mise à jour en direct (compteurs, ajouts depuis la popup)
 chrome.storage.onChanged.addListener(load);
 load();

@@ -86,11 +86,21 @@ Dans la fenêtre de l'extension :
 
 ### Mise à jour
 
+Une extension chargée en mode développeur **ne se met pas à jour toute seule**.
+
+**Installée avec `git clone`** :
+
 ```bash
 git pull
 ```
 
-puis, dans `chrome://extensions`, cliquez sur l'icône de rechargement (↻) de la carte de l'extension.
+**Installée avec le ZIP** : retéléchargez le ZIP, puis remplacez le contenu du dossier `extension` par le nouveau, **au même emplacement**.
+
+Dans les deux cas, cliquez ensuite sur l'icône de rechargement (↻) de la carte de l'extension dans `chrome://extensions`, puis rechargez les onglets des sites protégés (les pages déjà ouvertes gardent l'ancien code).
+
+Ne déplacez pas le dossier : le navigateur lui associe vos réglages, qui seraient perdus.
+
+**Quelle version ai-je ?** Le numéro figure sur la carte de l'extension dans `chrome://extensions` et en bas de la page « Sites protégés ». Comparez-le à la [dernière version](https://github.com/remilp89/anti-popup-lecteur/releases) et au [journal des modifications](CHANGELOG.md).
 
 ### Désinstallation
 
