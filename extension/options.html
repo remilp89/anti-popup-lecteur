@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anti-Popup Lecteur : sites protégés</title>
+  <style>
+    :root {
+      --bg: #f6f7f9; --card: #fff; --text: #1b1f24; --muted: #6a737d; --line: #e3e6ea;
+      --accent: #1f7a3f; --accent-bg: #e3f4e8; --danger: #c0392b;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14171a; --card: #1d2125; --text: #e8eaed; --muted: #9aa3ad; --line: #2c3238;
+        --accent: #5fd08a; --accent-bg: #1c3a29; --danger: #ff7b6b;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, sans-serif; }
+    main { max-width: 720px; margin: 0 auto; padding: 32px 16px 64px; }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    .sub { color: var(--muted); margin: 0 0 24px; }
+    .summary { display: flex; gap: 12px; margin-bottom: 20px; }
+    .stat { flex: 1; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat b { display: block; font-size: 26px; line-height: 1.2; }
+    .stat span { color: var(--muted); font-size: 13px; }
+    ul { list-style: none; margin: 0; padding: 0; background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+    li { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+    li:last-child { border-bottom: 0; }
+    a.name { font-weight: 600; color: var(--text); text-decoration: none; }
+    a.host { color: var(--muted); font-size: 13px; text-decoration: none; }
+    a.name:hover, a.host:hover { color: var(--accent); text-decoration: underline; }
+    a.name:focus-visible, a.host:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+    .grow { flex: 1; min-width: 0; }
+    .count { text-align: right; font-variant-numeric: tabular-nums; }
+    .count b { display: block; }
+    .count span { color: var(--muted); font-size: 12px; }
+    .badge { background: var(--accent-bg); color: var(--accent); font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+    button { font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--text); padding: 6px 12px; }
+    button:hover { border-color: var(--muted); }
+    button.remove { color: var(--danger); }
+    .empty { padding: 28px 16px; text-align: center; color: var(--muted); }
+    form { display: flex; gap: 8px; margin-top: 20px; }
+    input[type="text"] { flex: 1; min-width: 0; font: inherit; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--text); }
+    button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    @media (prefers-color-scheme: dark) { button.primary { color: #0e1a13; } }
+    .err { color: var(--danger); font-size: 13px; margin-top: 6px; min-height: 18px; }
+    .note { color: var(--muted); font-size: 13px; margin-top: 24px; }
+    @media (max-width: 480px) { .summary { flex-direction: column; } li { flex-wrap: wrap; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Sites protégés</h1>
+    <p class="sub">L'extension n'agit que sur ces sites : popups bloqués, redirections annulées, calques invisibles retirés.</p>
+
+    <div class="summary">
+      <div class="stat"><b id="nSites">0</b><span>sites protégés</span></div>
+      <div class="stat"><b id="nBlocked">0</b><span>blocages au total</span></div>
+    </div>
+
+    <ul id="list"></ul>
+
+    <form id="add" autocomplete="off">
+      <input type="text" id="host" placeholder="Ajouter un ou plusieurs sites, ex. exemple.com" aria-label="Domaine à protéger" />
+      <button class="primary" type="submit">Ajouter</button>
+    </form>
+    <div class="err" id="err" role="alert"></div>
+
+    <p class="note">Astuce : depuis l'icône de l'extension, « Activer sur ce site » ajoute le site ouvert dans l'onglet courant. Les sous-domaines d'un site protégé le sont aussi.</p>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

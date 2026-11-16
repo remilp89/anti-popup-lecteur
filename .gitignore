@@ -1,0 +1,15 @@
+# Réglages locaux de l'assistant de code (peuvent contenir des chemins personnels)
+.claude/
+
+# Système / éditeur
+.DS_Store
+.idea/
+.vscode/
+
+# Outils
+node_modules/
+*.log
+
+# Fichiers locaux jamais publiés
+*.local.*
+.env*
