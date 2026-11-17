@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anti-Popup Lecteur : à regarder</title>
+  <link rel="stylesheet" href="ui.css" />
+</head>
+<body>
+  <main>
+    <nav aria-label="Pages de l'extension">
+      <a href="options.html">Sites protégés</a>
+      <a href="watchlist.html" aria-current="page">À regarder</a>
+    </nav>
+
+    <h1>À regarder plus tard</h1>
+    <p class="sub">Les films et séries que tu mets de côté, synchronisés entre tes ordinateurs par ton compte Chrome.</p>
+
+    <div class="summary">
+      <div class="stat"><b id="nTodo">0</b><span>à voir</span></div>
+      <div class="stat"><b id="nSeen">0</b><span>vus</span></div>
+    </div>
+
+    <form id="add" class="addrow" autocomplete="off">
+      <input type="text" id="wTitle" placeholder="Titre d'un film ou d'une série" aria-label="Titre" />
+      <input type="number" id="wYear" placeholder="Année" min="1900" max="2100" aria-label="Année" />
+      <select id="wKind" aria-label="Type">
+        <option value="f">Film</option>
+        <option value="s">Série</option>
+      </select>
+      <button class="primary" type="submit">Ajouter</button>
+    </form>
+    <div class="err" id="err" role="alert"></div>
+
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Statut">
+        <button type="button" data-status="todo" aria-pressed="true">À voir</button>
+        <button type="button" data-status="seen" aria-pressed="false">Vus</button>
+        <button type="button" data-status="all" aria-pressed="false">Tous</button>
+      </div>
+      <select id="fKind" aria-label="Filtrer par type">
+        <option value="all">Films et séries</option>
+        <option value="f">Films</option>
+        <option value="s">Séries</option>
+      </select>
+      <input type="search" id="fQuery" placeholder="Rechercher" aria-label="Rechercher" />
+    </div>
+
+    <ul id="list"></ul>
+
+    <div class="usage" id="usage"></div>
+
+    <div class="footer-tools">
+      <button type="button" id="export">Exporter (.json)</button>
+      <button type="button" id="import">Importer…</button>
+      <input type="file" id="file" accept="application/json,.json" hidden />
+      <span class="note" id="toolMsg" role="status" style="margin: 0"></span>
+    </div>
+
+    <p class="note" id="version"></p>
+  </main>
+
+  <div class="snack" id="snack" role="status" hidden>
+    <span id="snackText"></span>
+    <button type="button" id="snackUndo">Annuler</button>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="watchlist.js"></script>
+</body>
+</html>

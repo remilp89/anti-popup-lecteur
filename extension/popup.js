@@ -14,9 +14,24 @@ $('manage').onclick = (e) => {
   e.preventDefault();
   chrome.runtime.openOptionsPage();
 };
+$('openList').onclick = (e) => {
+  e.preventDefault();
+  chrome.tabs.create({ url: chrome.runtime.getURL('watchlist.html') });
+};
 
 (async () => {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  // `?tab=<id>` permet d'ouvrir cette fenêtre dans un onglet pour une page donnée (utile pour tester).
+  const q = new URLSearchParams(location.search).get('tab');
+  const tab = q
+    ? await chrome.tabs.get(Number(q)).catch(() => null)
+    : (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+
+  protection(tab);
+  watchlist(tab);
+})();
+
+// --- Protection du site ------------------------------------------------------
+async function protection(tab) {
   const host = hostOf(tab?.url || '');
   const s = await chrome.storage.sync.get(DEFAULTS);
 
@@ -51,4 +66,86 @@ $('manage').onclick = (e) => {
     s.maxRetries = Math.min(20, Math.max(1, Number($('retries').value) || 6));
     save(true);
   };
-})();
+}
+
+// --- À regarder plus tard ----------------------------------------------------
+async function watchlist(tab) {
+  const updateCount = async () => {
+    try {
+      $('count').textContent = String((await PS.watch.list()).filter((i) => !i.v).length);
+    } catch (_) {}
+  };
+  updateCount();
+
+  if (!/^https?:/.test(tab?.url || '')) return; // pas une page web : on n'affiche pas le bloc
+
+  $('watch').hidden = false;
+
+  // Infos de la page : lues par le script de contenu, sinon déduites du titre de l'onglet.
+  let info = null;
+  try {
+    info = await chrome.tabs.sendMessage(tab.id, { type: 'pageInfo' }, { frameId: 0 });
+  } catch (_) {}
+  if (!info) info = PS.infoFromTab(tab);
+
+  $('wTitle').value = info.title || '';
+  $('wYear').value = info.year || '';
+  $('wKind').value = info.kind === 's' ? 's' : 'f';
+  const url = info.url || PS.normalizeUrl(tab.url);
+
+  const form = () => ({ t: $('wTitle').value, y: $('wYear').value, k: $('wKind').value, u: url });
+  let state = { mode: 'none' };
+  let ticket = 0;
+
+  async function refresh(message) {
+    const mine = ++ticket;
+    const rec = form();
+    const btn = $('wAction');
+    let next;
+    if (!rec.t.trim()) {
+      next = { mode: 'none', label: 'Ajouter à ma liste', text: '' };
+    } else {
+      const id = PS.makeId(PS.watch.clean(rec));
+      const ex = await PS.watch.get(id).catch(() => null);
+      if (!ex) next = { mode: 'add', rec, label: 'Ajouter à ma liste', text: '' };
+      else if (!ex.v) next = { mode: 'seen', id, label: 'Marquer comme vu', text: 'Déjà dans ta liste (à voir).' };
+      else next = { mode: 'unseen', id, label: 'Remettre à voir', text: `Vu le ${PS.fmtDate(ex.v)}.` };
+    }
+    if (mine !== ticket) return; // une saisie plus récente a pris le relais
+    state = next;
+    btn.textContent = next.label;
+    btn.disabled = next.mode === 'none';
+    $('wMsg').textContent = message || next.text;
+  }
+
+  $('wAction').onclick = async () => {
+    $('wAction').disabled = true;
+    try {
+      let msg = '';
+      if (state.mode === 'add') {
+        await PS.watch.add(state.rec);
+        msg = '✓ Ajouté à ta liste.';
+      } else if (state.mode === 'seen') {
+        await PS.watch.setSeen(state.id, true);
+        msg = '✓ Marqué comme vu.';
+      } else if (state.mode === 'unseen') {
+        await PS.watch.setSeen(state.id, false);
+        msg = '✓ Remis dans les titres à voir.';
+      }
+      await refresh(msg);
+      updateCount();
+    } catch (e) {
+      $('wMsg').textContent = PS.errorMessage(e);
+      $('wAction').disabled = false;
+    }
+  };
+
+  let t = null;
+  for (const id of ['wTitle', 'wYear', 'wKind']) {
+    $(id).addEventListener('input', () => {
+      clearTimeout(t);
+      t = setTimeout(() => refresh(), 150);
+    });
+  }
+  refresh();
+}

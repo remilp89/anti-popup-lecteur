@@ -196,6 +196,16 @@
     onBlocked();
   });
 
+  // La fenêtre de l'extension demande le titre / l'année / le type de la page ouverte.
+  chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+    if (msg.type !== 'pageInfo' || window !== window.top) return;
+    try {
+      sendResponse(PS.readPage(document, location));
+    } catch (_) {
+      sendResponse(null);
+    }
+  });
+
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg.type === 'popup-blocked') onBlocked();
     else if (msg.type === 'playing') {

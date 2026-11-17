@@ -3,25 +3,73 @@
 <head>
   <meta charset="utf-8" />
   <style>
-    body { font: 13px system-ui, sans-serif; width: 260px; margin: 12px; }
+    :root {
+      --bg: #fff; --text: #1b1f24; --muted: #6a737d; --line: #e3e6ea; --field: #fff;
+      --accent: #1f7a3f; --accent-bg: #e3f4e8; --link: #1a73e8;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #1d2125; --text: #e8eaed; --muted: #9aa3ad; --line: #2c3238; --field: #14171a;
+              --accent: #5fd08a; --accent-bg: #1c3a29; --link: #8ab4f8; }
+    }
+    * { box-sizing: border-box; }
+    body { font: 13px/1.45 system-ui, -apple-system, sans-serif; width: 300px; margin: 0; padding: 12px; background: var(--bg); color: var(--text); }
     h1 { font-size: 14px; margin: 0 0 8px; }
+    h2 { font-size: 13px; margin: 0 0 8px; }
     #host { font-weight: 600; word-break: break-all; }
-    button { width: 100%; padding: 8px; margin: 10px 0; font-size: 13px; cursor: pointer; }
-    label { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
-    input[type=number] { width: 48px; }
-    .on { background: #d6f5dd; }
-    small { color: #666; }
-    a { color: #1a73e8; }
+    button { font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--line); background: var(--field); color: var(--text); padding: 8px; }
+    button:disabled { opacity: .5; cursor: default; }
+    #toggle, #wAction { width: 100%; margin: 8px 0; }
+    #toggle.on { background: var(--accent-bg); border-color: var(--accent); }
+    #wAction { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; margin-bottom: 4px; }
+    @media (prefers-color-scheme: dark) { #wAction { color: #0e1a13; } }
+    label.row { display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+    input, select { font: inherit; color: var(--text); background: var(--field); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; min-width: 0; }
+    input[type="number"] { width: 64px; }
+    input[type="checkbox"] { accent-color: var(--accent); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    section { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; }
+    .fields { display: flex; flex-direction: column; gap: 6px; }
+    .inline { display: flex; gap: 6px; }
+    .inline input[type="number"] { flex: none; }
+    .inline select { flex: 1; }
+    #wTitle { width: 100%; }
+    #wMsg { min-height: 18px; color: var(--muted); }
+    .links { display: flex; justify-content: space-between; gap: 8px; margin-top: 10px; }
+    a { color: var(--link); }
+    small { color: var(--muted); }
   </style>
 </head>
 <body>
   <h1>Anti-Popup Lecteur</h1>
+
   <div id="host">…</div>
   <button id="toggle">…</button>
-  <label><input type="checkbox" id="fs" /> Plein écran automatique</label>
-  <label>Reclics max <input type="number" id="retries" min="1" max="20" /></label>
-  <a href="#" id="manage">Gérer les sites protégés</a><br />
+  <label class="row"><input type="checkbox" id="fs" /> Plein écran automatique</label>
+  <label class="row">Reclics max <input type="number" id="retries" min="1" max="20" /></label>
   <small>La page se recharge après chaque changement.</small>
+
+  <section id="watch" hidden>
+    <h2>À regarder plus tard</h2>
+    <div class="fields">
+      <input type="text" id="wTitle" placeholder="Titre du film ou de la série" aria-label="Titre" />
+      <div class="inline">
+        <input type="number" id="wYear" placeholder="Année" min="1900" max="2100" aria-label="Année" />
+        <select id="wKind" aria-label="Type">
+          <option value="f">Film</option>
+          <option value="s">Série</option>
+        </select>
+      </div>
+    </div>
+    <button id="wAction" disabled>Ajouter à ma liste</button>
+    <div id="wMsg" role="status"></div>
+  </section>
+
+  <div class="links">
+    <a href="#" id="openList">Ma liste (<span id="count">0</span> à voir)</a>
+    <a href="#" id="manage">Sites protégés</a>
+  </div>
+
+  <script src="shared.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
